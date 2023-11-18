@@ -1,5 +1,5 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Injectable, inject} from '@angular/core';
 import {
 	Observable,
 	catchError,
@@ -18,16 +18,17 @@ import {
 	PAYLOAD_RICH_TEXT_HANDLER,
 	PAYLOAD_SERVER_URL,
 } from './tokens';
-import { FieldSchemaJSON } from './types';
+import {FieldSchemaJSON} from './types';
 
 @Injectable()
 export class PayloadLivePreviewService {
 	private readonly serverURL = inject(PAYLOAD_SERVER_URL);
-	private readonly apiRoute = inject(PAYLOAD_API_ROUTE, { optional: true });
+	private readonly apiRoute = inject(PAYLOAD_API_ROUTE, {optional: true});
 	private readonly richTextHandler = inject(PAYLOAD_RICH_TEXT_HANDLER, {
 		optional: true,
 	});
 	private readonly httpClient = inject(HttpClient);
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	private base$: Observable<any>;
 
 	constructor() {
@@ -41,7 +42,7 @@ export class PayloadLivePreviewService {
 					return throwError(() => error);
 				}
 			}),
-			filter((eventData) => eventData?.type === 'payload-live-preview')
+			filter((eventData) => eventData?.type === 'payload-live-preview'),
 		);
 	}
 
@@ -53,14 +54,15 @@ export class PayloadLivePreviewService {
 				ready: true,
 				type: 'payload-live-preview',
 			}),
-			this.serverURL
+			this.serverURL,
 		);
 	}
 
 	data$<T>(initialData: T, depth?: number): Observable<T> {
-		let fieldSchema: any;
+		let fieldSchema: FieldSchemaJSON;
 
 		return this.base$.pipe(
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			tap((eventData: any) => {
 				if (!fieldSchema && eventData.fieldSchemaJSON) {
 					fieldSchema = eventData.fieldSchemaJSON;
@@ -69,7 +71,7 @@ export class PayloadLivePreviewService {
 			switchMap((eventData) => {
 				if (!fieldSchema) {
 					console.warn(
-						'Payload Live Preview: No `fieldSchemaJSON` was received from the parent window. Unable to merge data.'
+						'Payload Live Preview: No `fieldSchemaJSON` was received from the parent window. Unable to merge data.',
 					);
 					return of(initialData);
 				} else {
@@ -80,7 +82,7 @@ export class PayloadLivePreviewService {
 						initialData,
 					});
 				}
-			})
+			}),
 		);
 	}
 
@@ -90,9 +92,9 @@ export class PayloadLivePreviewService {
 		incomingData: Partial<T>;
 		initialData: T;
 	}): Observable<T> {
-		const { depth, fieldSchema, incomingData, initialData } = args;
+		const {depth, fieldSchema, incomingData, initialData} = args;
 
-		const result = { ...initialData };
+		const result = {...initialData};
 
 		const population$: Observable<void>[] = [];
 
@@ -152,7 +154,7 @@ export class PayloadLivePreviewService {
 									});
 
 									return result[fieldName][i];
-								}
+								},
 							);
 						}
 						break;
@@ -191,7 +193,7 @@ export class PayloadLivePreviewService {
 									});
 
 									return result[fieldName][i];
-								}
+								},
 							);
 						} else {
 							result[fieldName] = [];
@@ -258,7 +260,7 @@ export class PayloadLivePreviewService {
 													collection: newRelation,
 													depth: depth || 0,
 													ref: result[fieldName][i],
-												})
+												}),
 											);
 										}
 									} else {
@@ -272,15 +274,15 @@ export class PayloadLivePreviewService {
 													id: incomingRelation,
 													accessor: i,
 													collection: String(
-														fieldSchema.relationTo
+														fieldSchema.relationTo,
 													),
 													depth: depth || 0,
 													ref: result[fieldName],
-												})
+												}),
 											);
 										}
 									}
-								}
+								},
 							);
 						} else {
 							// Handle `hasOne` polymorphic
@@ -342,7 +344,7 @@ export class PayloadLivePreviewService {
 												collection: newRelation,
 												depth: depth || 0,
 												ref: result[fieldName],
-											})
+											}),
 										);
 									} else {
 										result[fieldName] = null;
@@ -374,14 +376,14 @@ export class PayloadLivePreviewService {
 												id: newID,
 												accessor: fieldName,
 												collection: String(
-													fieldSchema.relationTo
+													fieldSchema.relationTo,
 												),
 												depth: depth || 0,
 												ref: result as Record<
 													string,
 													unknown
 												>,
-											})
+											}),
 										);
 									} else {
 										result[fieldName] = null;
@@ -422,7 +424,7 @@ export class PayloadLivePreviewService {
 		id: number | string;
 		ref: Record<string, unknown>;
 	}): Observable<void> {
-		const { id, accessor, collection, depth, ref } = args;
+		const {id, accessor, collection, depth, ref} = args;
 
 		const url = `${this.serverURL}${
 			this.apiRoute || '/api'
@@ -443,7 +445,7 @@ export class PayloadLivePreviewService {
 				catchError((err) => {
 					console.error(err);
 					return of(undefined);
-				})
+				}),
 			);
 	}
 }

@@ -1,5 +1,5 @@
-import type { Observable } from 'rxjs';
-import type { PayloadLivePreviewService } from './service';
+import type {Observable} from 'rxjs';
+import type {PayloadLivePreviewService} from './service';
 
 type UnwrapArray<T> = T extends Array<infer R> ? R : never;
 
@@ -48,5 +48,5 @@ export type PayloadRichTextHandlerArgs<T> = {
 };
 
 export type PayloadRichTextHandler<T> = (
-	args: PayloadRichTextHandlerArgs<T>
+	args: PayloadRichTextHandlerArgs<T>,
 ) => void;
