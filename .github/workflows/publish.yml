@@ -20,6 +20,8 @@ jobs:
             - run: pnpm install
             - run: pnpm run ci:test
             - run: pnpm run build
-            - run: npm publish
+            - name: 'Publish'
+              working-directory: ./dist/ngx-payload-live-preview
+              run: npm publish
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
