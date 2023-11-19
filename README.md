@@ -1,27 +1,10 @@
-# Workspace
+# ngx-payload-live-preview
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.0.0.
+The ngx-payload-live-preview library is tailored for seamless integration within Angular applications, aiming to replicate the functionality offered by the @payloadcms/live-preview package while aligning closely with Angular development paradigms.
 
-## Development server
+-   This library adopts Observables as a preferred mechanism over the traditional `subscribe`/`unsubscribe` methods found in the original package, ensuring a more reactive and efficient approach to data handling.
+-   Leveraging Angular's `HttpModule` instead of native fetch, the library ensures compatibility with Angular interceptors.
+-   Addressing a notable gap in the PayloadCMS package, `ngx-payload-live-preview` offers robust handling capabilities for Rich Text fields, enhancing content management within Angular applications.
+-   The library advocates the use of providers for managing constants such as `serverURL` or `apiRoute`, streamlining the configuration process and promoting a more maintainable codebase.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+As of the present phase, the library remains in an 'alpha' stage of development, primarily deployed within organizational projects.
