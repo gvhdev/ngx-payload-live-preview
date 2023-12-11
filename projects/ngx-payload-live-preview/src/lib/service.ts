@@ -10,7 +10,6 @@ import {
 	of,
 	switchMap,
 	tap,
-	throwError,
 } from 'rxjs';
 
 import {
@@ -33,16 +32,14 @@ export class PayloadLivePreviewService {
 
 	constructor() {
 		this.base$ = fromEvent<MessageEvent>(window, 'message').pipe(
-			filter((event) => event.origin === this.serverURL && event.data),
-			map((event) => JSON.parse(event.data)),
-			catchError((error) => {
-				if (error instanceof SyntaxError) {
-					return of(undefined);
-				} else {
-					return throwError(() => error);
-				}
-			}),
-			filter((eventData) => eventData?.type === 'payload-live-preview'),
+			filter(
+				(event) =>
+					event.origin === this.serverURL &&
+					event.data &&
+					typeof event.data === 'object' &&
+					event.data.type === 'payload-live-preview',
+			),
+			map((e) => e.data),
 		);
 	}
 
@@ -50,10 +47,10 @@ export class PayloadLivePreviewService {
 		const windowToPostTo: Window = window.opener || window.parent;
 
 		windowToPostTo?.postMessage(
-			JSON.stringify({
+			{
 				ready: true,
 				type: 'payload-live-preview',
-			}),
+			},
 			this.serverURL,
 		);
 	}
