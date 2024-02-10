@@ -27,6 +27,7 @@ export class PayloadLivePreviewService {
 		optional: true,
 	});
 	private readonly httpClient = inject(HttpClient);
+	private readonly cacheFetch: Map<string, object> = new Map();
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	private base$: Observable<any>;
 
@@ -427,22 +428,30 @@ export class PayloadLivePreviewService {
 			this.apiRoute || '/api'
 		}/${collection}/${id}?depth=${depth}`;
 
-		return this.httpClient
-			.get(url, {
+		let res$: Observable<object>;
+
+		if (this.cacheFetch.has(url)) {
+			res$ = of(this.cacheFetch.get(url)!);
+		} else {
+			res$ = this.httpClient.get(url, {
 				withCredentials: true,
 				headers: {
 					'Content-Type': 'application/json',
 				},
-			})
-			.pipe(
-				tap((res) => {
-					ref[accessor] = res;
-				}),
-				map(() => undefined),
-				catchError((err) => {
-					console.error(err);
-					return of(undefined);
-				}),
-			);
+			}).pipe(
+				tap((res) => this.cacheFetch.set(url, res))
+			)
+		}
+
+		return res$.pipe(
+			tap((res) => {
+				ref[accessor] = res;
+			}),
+			map(() => undefined),
+			catchError((err) => {
+				console.error(err);
+				return of(undefined);
+			}),
+		);
 	}
 }
